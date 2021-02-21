@@ -84,6 +84,8 @@ func makeSystemAdminCmdF(command *cobra.Command, args []string) error {
 			return errUpdate
 		}
 
+		CommandPrintln("Updated", updatedUser.Username, "roles:", updatedUser.Roles)
+
 		auditRec := a.MakeAuditRecord("makeSystemAdmin", audit.Success)
 		auditRec.AddMeta("user", user)
 		auditRec.AddMeta("update", updatedUser)
@@ -132,6 +134,8 @@ func makeMemberCmdF(command *cobra.Command, args []string) error {
 		if errUpdate != nil {
 			return errUpdate
 		}
+
+		CommandPrintln("Updated", updatedUser.Username, "roles:", updatedUser.Roles)
 
 		auditRec := a.MakeAuditRecord("makeMember", audit.Success)
 		auditRec.AddMeta("user", user)
