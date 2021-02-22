@@ -14,16 +14,19 @@ func TestAssignRole(t *testing.T) {
 	th := Setup(t).InitBasic()
 	defer th.TearDown()
 
-	th.CheckCommand(t, "roles", "system_admin", th.BasicUser.Email)
+	output := th.CheckCommand(t, "roles", "system_admin", th.BasicUser.Email)
 
 	user, err := th.App.Srv().Store.User().GetByEmail(th.BasicUser.Email)
 	require.Nil(t, err)
 	assert.Equal(t, "system_user system_admin", user.Roles)
+	assert.Contains(t, output, user.Roles, "should have the user roles")
+	assert.Contains(t, output, user.Username, "should have the username")
 
-	th.CheckCommand(t, "roles", "member", th.BasicUser.Email)
+	output = th.CheckCommand(t, "roles", "member", th.BasicUser.Email)
 
 	user, err = th.App.Srv().Store.User().GetByEmail(th.BasicUser.Email)
 	require.Nil(t, err)
 	assert.Equal(t, "system_user", user.Roles)
-
+	assert.Contains(t, output, user.Roles, "should have the user roles")
+	assert.Contains(t, output, user.Username, "should have the username")
 }
