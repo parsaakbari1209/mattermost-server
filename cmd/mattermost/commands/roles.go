@@ -5,6 +5,7 @@ package commands
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -84,7 +85,12 @@ func makeSystemAdminCmdF(command *cobra.Command, args []string) error {
 			return errUpdate
 		}
 
-		CommandPrintln("Updated", updatedUser.Username, "roles:", updatedUser.Roles)
+		if !systemUser {
+			CommandPrintln(fmt.Sprintf("System user role assigned to user %q. Current roles are: %s", args[i], strings.Replace(updatedUser.Roles, " ", ", ", -1)))
+		}
+		if !systemAdmin {
+			CommandPrintln(fmt.Sprintf("System admin role assigned to user %q. Current roles are: %s", args[i], strings.Replace(updatedUser.Roles, " ", ", ", -1)))
+		}
 
 		auditRec := a.MakeAuditRecord("makeSystemAdmin", audit.Success)
 		auditRec.AddMeta("user", user)
@@ -135,7 +141,11 @@ func makeMemberCmdF(command *cobra.Command, args []string) error {
 			return errUpdate
 		}
 
-		CommandPrintln("Updated", updatedUser.Username, "roles:", updatedUser.Roles)
+		if !systemUser {
+			CommandPrintln(fmt.Sprintf("System user role assigned to user %q. Current roles are: %s", args[i], strings.Replace(updatedUser.Roles, " ", ", ", -1)))
+		}
+
+		CommandPrintln(fmt.Sprintf("System admin role revoked for user %q. Current roles are: %s", args[i], strings.Replace(updatedUser.Roles, " ", ", ", -1)))
 
 		auditRec := a.MakeAuditRecord("makeMember", audit.Success)
 		auditRec.AddMeta("user", user)
